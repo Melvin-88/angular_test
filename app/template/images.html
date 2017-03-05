@@ -1,0 +1,8 @@
+<div class="img_box">
+    <a href="" ng-click="userController.open(value.id)" data-id="{{value.id}}">
+        <img ng-src="{{value.images.fixed_width.url}}" class="img-responsive">
+    </a>
+    <span ng-show="hovered" class="add_favorite" style="" ng-click="userController.addFavorite(value.id)">
+        <i class="fa fa-heart" style=""></i>
+    </span>
+</div>
