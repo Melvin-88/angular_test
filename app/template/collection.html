@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row" infinite-scroll="userController.images.nextPage()" infinite-scroll-disabled='userController.images.busy'  infinite-scroll-distance="1">
+                <user-img
+                        ng-repeat="(key, value) in userController.images.collection"
+                        ng-mouseenter="hovered = true"
+                        ng-mouseleave="hovered = false"
+                        class="col-md-3 col-sm-4 col-xs-6"
+                        >
+                </user-img>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,16 +4,30 @@ var app = angular.module('app', [
     'ui.bootstrap',
     'ngAnimate',
     'infinite-scroll',
-    'ngFileUpload'
+    'ngFileUpload',
+    'ngRoute'
 ]);
-
+app.config(function($routeProvider) {
+    $routeProvider
+        .when("/", {
+            templateUrl : "../template/main.html"
+        })
+        .when("/collection", {
+            templateUrl : "../template/collection.html"
+        })
+});
 app.directive('userImg', function(){
     return{
         restrict: 'E',
         templateUrl: '../template/images.html'
     }
 });
-
+app.directive('tagsInput', function(){
+    return{
+        restrict: 'E',
+        templateUrl: '../template/tags-input.html'
+    }
+});
 app.directive('modal', function(){
     return{
         restrict: 'E',
@@ -29,7 +43,8 @@ function UserImages ($scope, $log, $http, Images, Upload){
     var images  = new Images();
     that.newFile = {
         file: null,
-        image_url: null
+        image_url: null,
+        tags: null
     };
 
     that.images   = images;
@@ -45,6 +60,11 @@ function UserImages ($scope, $log, $http, Images, Upload){
             that.images = images;
         }
     };
+
+    that.getMyCollection = function () {
+        images.myCollection();
+    };
+    that.getMyCollection();
 
     that.addFavorite = function (id) {
         var list;
@@ -62,6 +82,7 @@ function UserImages ($scope, $log, $http, Images, Upload){
             list.push(id);
         }
         localStorage.setItem('favorite', JSON.stringify(list));
+        images.myCollection();
     };
 
     that.open = function (id) {
@@ -72,14 +93,22 @@ function UserImages ($scope, $log, $http, Images, Upload){
     };
 
     that.uploadFiles = function () {
+        var tags;
         if ((!that.newFile.file && !that.newFile.source_image_url)) return;
+        if(that.newFile.tags){
+            tags = that.newFile.tags.map(function (elem) {
+                return elem.text;
+            }).join(",");
+        }else{
+            that.newFile.tags = '';
+        }
         var url = 'http://upload.giphy.com/v1/gifs';
         var data = {
             username: 'Melvin',
             api_key: 'dc6zaTOxFJmzC',
             file: that.newFile.file,
             source_image_url: that.newFile.image_url,
-            tags: ''
+            tags: tags
         };
 
         return Upload.upload({
@@ -99,6 +128,7 @@ app.factory('Images', function($http, $log) {
     var Images = function () {
         this.apiKey = 'api_key=dc6zaTOxFJmzC';
         this.items = [];
+        this.collection = [];
         this.offset = 0;
         this.limit = 30;
         this.busy = false;
@@ -135,6 +165,28 @@ app.factory('Images', function($http, $log) {
         this.queryString = query;
         this.nextPage();
     }
+
+    Images.prototype.myCollection = function () {
+        this.collection = [];
+        let localId = JSON.parse(localStorage.favorite);
+        let ids = localId.join(',');
+        var search = {
+            ids: ids,
+            api_key: 'dc6zaTOxFJmzC'
+        };
+        $http({
+            method: 'GET',
+            url: 'http://api.giphy.com/v1/gifs',
+            params: search
+        }).then(function(response) {
+            var items = response.data.data;
+            for (var i = 0; i < items.length; i++) {
+                this.collection.push(items[i]);
+                this.offset++;
+            }
+        }.bind(this));
+        console.log(this.collection)
+    };
 
     Images.prototype.nextPage = function() {
         var that = this;

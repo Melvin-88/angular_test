@@ -22,6 +22,7 @@ gulp.task('js', function() {
     return gulp.src([
         'app/js/jquery-3.1.1.min.js',
         'app/bower_components/angular/angular.js',
+        'app/bower_components/angular-route/angular-route.js',
         'app/bower_components/ng-file-upload/ng-file-upload.min.js',
         'app/js/ng-infinite-scroll.js',
         'app/js/bootstrap.min.js',

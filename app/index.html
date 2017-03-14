@@ -9,63 +9,20 @@
 </head>
   <body ng-controller="UserController as userController">
   <div class="container">
-    <div class="row">
-      <div class="col-sm-6 col-sm-offset-3">
-        <div id="imaginary_container">
-          <div class="input-group stylish-input-group">
-            <input type="text" class="form-control" ng-model="query"  ng-keyup="userController.search(query)" placeholder="Search...">
-                    <span class="input-group-addon">
-                        <button type="submit" ng-click="userController.search(query)">
-                          <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
-                    </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container">
       <div class="row">
-          <div class="col-sm-6 col-sm-offset-3">
-              <form name="form" autocomplete="off" name="userController.form" ng-submit="userController.uploadFiles()">
-              <div class="form-group">
-                  <label>Upload Image</label>
-                  <div class="input-group">
-                      <span class="input-group-btn">
-                          <button type="button" class="btn btn-default btn-file"
-                                ng-model="userController.newFile.file"
-                                name="file"
-                                ngf-select
-                                ngf-accept="'image/*'"
-                                ngf-pattern="'.gif'"
-                                ngf-multiple="false"
-                                  >
-                            Browse…
-                          </button>
-                      </span>
-                      <input type="url"
-                             placeholder="{{userController.newFile.file.name ? userController.newFile.file.name : 'URL link...' }}"
-                             class="form-control"
-                             ng-model="userController.newFile.source_image_url">
-                      <button type="submit" class="rr_e">Add</button>
-                  </div>
-                  <p class="add_img text-center"></p>
-              </div>
-              </form>
+          <div class="col-sm-12">
+              <ul class="nav_list">
+                  <li>
+                      <a href="#/">Main</a>
+                  </li>
+                  <li>
+                      <a href="#/collection">My Collection</a>
+                  </li>
+              </ul>
           </div>
       </div>
   </div>
-  <div class="container">
-    <div class="row" infinite-scroll="userController.images.nextPage()" infinite-scroll-disabled='userController.images.busy'  infinite-scroll-distance="1">
-      <user-img
-              ng-repeat="(key, value) in userController.images.items"
-              ng-mouseenter="hovered = true"
-              ng-mouseleave="hovered = false"
-              class="col-md-3 col-sm-4 col-xs-6"
-              >
-      </user-img>
-    </div>
-  </div>
+  <div ng-view></div>
   <modal></modal>
   </body>
 </html>
