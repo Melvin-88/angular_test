@@ -50,7 +50,6 @@ function UserImages ($scope, $log, $http, Images, Upload){
     that.images   = images;
 
     that.search   = function (query) {
-        console.log(query.length)
         if(query.length>=3){
             images.search(query);
             that.images = images;
@@ -67,11 +66,9 @@ function UserImages ($scope, $log, $http, Images, Upload){
     that.getMyCollection();
 
     that.addFavorite = function (id) {
-        var list;
+        var list =[];
         if(localStorage.favorite){
             list = JSON.parse(localStorage.favorite);
-        }else{
-            list = []
         }
         var newArr = list.filter((e)=>{
             return e == id;
@@ -168,7 +165,11 @@ app.factory('Images', function($http, $log) {
 
     Images.prototype.myCollection = function () {
         this.collection = [];
-        let localId = JSON.parse(localStorage.favorite);
+        let localId = [];
+        try {
+            localId = JSON.parse(localStorage.favorite);
+        } catch (e) {
+        }
         let ids = localId.join(',');
         var search = {
             ids: ids,
@@ -185,7 +186,6 @@ app.factory('Images', function($http, $log) {
                 this.offset++;
             }
         }.bind(this));
-        console.log(this.collection)
     };
 
     Images.prototype.nextPage = function() {
